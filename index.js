@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    if(window.location.pathname.includes("index.html")){
+    if(window.location.pathname.includes("/index.html")){
         const errorMassages=["enter your name you fucking bastard","just enter your name, don't make me do this you shit!","bastard of no-name enter your name!"];
         var i=0;
 
