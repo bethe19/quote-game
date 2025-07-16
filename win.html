@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+  <title>Who said it?</title>
+</head>
+<body class="game">
+
+  <div class="game-bar">
+    <div class="healthC">
+      <div class="health"></div>
+      <div class="health"></div>
+      <div class="health"></div>
+    </div>
+    <div class="counter">Correct: <span id="correctCount">0</span></div>
+    <img src="./assets/backAsset 10.png" alt="Back" height="30">
+  </div>
+
+  <div class="questionContainer">
+    <img src="./assets/Asset 1@2x.png" alt="Logo" class="logo-on" style="height: 80px;">
+    <div class="question-text">
+      <h1 class="qno">question 01</h1>
+      <p>Who said it?</p>
+      <hr>
+      <h2 class="quote">Quote will appear here...</h2>
+    </div>
+    <div class="question"></div>
+  </div>
+
+  <footer>Made by Bethe ©2025 All rights reserved</footer>
+
+  <script>
+    const questions = [
+      {
+        quote: "“THE MAN WHO PASSES THE SENTENCE SHOULD SWING THE SWORD.”",
+        choices: ["Eddard Stark", "Tyrion Lannister", "Cersei Lannister", "Jon Snow"],
+        correct: 0
+      },
+      {
+        quote: "“CHAOS ISN’T A PIT. CHAOS IS A LADDER.”",
+        choices: ["Varys", "Petyr Baelish", "Tywin Lannister", "Bran Stark"],
+        correct: 1
+      },
+      {
+        quote: "“I DRINK AND I KNOW THINGS.”",
+        choices: ["Tyrion Lannister", "Jaime Lannister", "The Hound", "Bronn"],
+        correct: 0
+      },
+      {
+        quote: "“WHAT DO WE SAY TO THE GOD OF DEATH? NOT TODAY.”",
+        choices: ["Melisandre", "Arya Stark", "Syrio Forel", "Brienne of Tarth"],
+        correct: 2
+      },
+      {
+        quote: "“POWER RESIDES WHERE MEN BELIEVE IT RESIDES.”",
+        choices: ["Tyrion Lannister", "Varys", "Petyr Baelish", "Cersei Lannister"],
+        correct: 1
+      },
+      {
+        quote: "“THE THINGS I DO FOR LOVE.”",
+        choices: ["Tyrion", "Ned Stark", "Jaime Lannister", "Robb Stark"],
+        correct: 2
+      },
+      {
+        quote: "“A LION DOES NOT CONCERN HIMSELF WITH THE OPINION OF SHEEP.”",
+        choices: ["Tywin Lannister", "Cersei", "Tommen", "Stannis Baratheon"],
+        correct: 0
+      },
+      {
+        quote: "“THE NORTH REMEMBERS.”",
+        choices: ["Sansa Stark", "Arya Stark", "Theon Greyjoy", "Ramsay Bolton"],
+        correct: 0
+      },
+      {
+        quote: "“NEVER FORGET WHAT YOU ARE, THE REST OF THE WORLD WILL NOT.”",
+        choices: ["Tyrion", "Ned", "Bran", "Jorah"],
+        correct: 0
+      },
+      {
+        quote: "“VALAR MORGHULIS.”",
+        choices: ["Jaqen H'ghar", "Arya Stark", "Cersei", "Missandei"],
+        correct: 0
+      },
+      {
+        quote: "“WHEN YOU PLAY THE GAME OF THRONES, YOU WIN OR YOU DIE.”",
+        choices: ["Cersei Lannister", "Daenerys Targaryen", "Arya Stark", "Sansa Stark"],
+        correct: 0
+      },
+      {
+        quote: "“A MIND NEEDS BOOKS AS A SWORD NEEDS A WHETSTONE.”",
+        choices: ["Jon Snow", "Samwell Tarly", "Tyrion Lannister", "Bran Stark"],
+        correct: 2
+      },
+      {
+        quote: "“WINTER IS COMING.”",
+        choices: ["Ned Stark", "Jon Snow", "Bran Stark", "Benjen Stark"],
+        correct: 0
+      },
+      {
+        quote: "“DRACARYS.”",
+        choices: ["Missandei", "Daenerys Targaryen", "Rhaegal", "Grey Worm"],
+        correct: 1
+      }
+    ];
+
+    let currentQuestion = 0;
+    let health = 3;
+    let correctAnswers = 0;
+
+    const questionNumber = document.querySelector('.qno');
+    const quoteText = document.querySelector('.quote');
+    const questionContainer = document.querySelector('.question');
+    const healthEls = document.querySelectorAll('.health');
+    const correctCounter = document.getElementById('correctCount');
+
+function gameOver(type) {
+  let name = localStorage.getItem("username");
+  name = name ? name.toUpperCase() : "WARRIOR";
+  questionContainer.style.display = "flex";
+  questionContainer.style.justifyContent = "center";
+  questionContainer.style.width = "100%";
+
+  let title = "";
+  let message = "";
+
+  if (type === "dead") {
+    title = "Your watch has ended...";
+    message = `You answered ${correctAnswers} with honor.<br>
+               Like snow melting under the sun, even the strongest must fall.`;
+  } else {
+    // Award title based on performance
+    if (correctAnswers >= 10) {
+      title = "🐉 DRAGON RIDER";
+      message = `${name}, the skies are yours.<br>You ride the storm on dragon wings.`;
+    } else if (correctAnswers >= 7) {
+      title = "🤴 HAND OF THE KING";
+      message = `${name}, you walk the halls of power.<br>Your counsel shapes kingdoms.`;
+    } else if (correctAnswers >= 4) {
+      title = "🗡️ KNIGHT OF THE REALM";
+      message = `${name}, you fought with valor.<br>The crown watches with curious eyes.`;
+    } else if (correctAnswers >= 2) {
+      title = "❄️ WATCHER ON THE WALL";
+      message = `${name}, duty is your reward.<br>Exiled to the Wall, but alive.`;
+    } else {
+      title = "☠️ DISHONORED PEASANT";
+      message = `${name}, you fell on your own sword.<br>Not even Ghost remembers your name.`;
+    }
+  }
+
+  questionNumber.textContent = title;
+  quoteText.textContent = `${name}, ${title}`;
+  questionContainer.innerHTML = `
+    <p style="font-size: 20px; color: #2b2b2b; text-align: center">
+      ${message}<br><br>
+      You answered ${correctAnswers} correctly.
+    </p>`;
+}
+
+
+    function loadQuestion(index) {
+      const q = questions[index];
+      questionNumber.textContent = `question ${String(index + 1).padStart(2, '0')}`;
+      quoteText.textContent = q.quote;
+      questionContainer.innerHTML = "";
+
+      q.choices.forEach((name, i) => {
+        const div = document.createElement('div');
+        div.className = 'choice';
+        if (i === q.correct) div.dataset.correct = "true";
+
+        div.innerHTML = `
+          <p class="name">${name}</p>
+          <div class="valid"></div>
+        `;
+        questionContainer.appendChild(div);
+      });
+
+      const allChoices = document.querySelectorAll('.choice');
+      allChoices.forEach(choice => {
+        choice.addEventListener('click', () => {
+          allChoices.forEach(c => c.style.pointerEvents = "none");
+
+          const isCorrect = choice.dataset.correct === "true";
+          const icon = document.createElement('img');
+          icon.src = isCorrect ? "./assets/right.png" : "./assets/wrong.png";
+          choice.querySelector('.valid').appendChild(icon);
+
+          if (isCorrect) {
+            correctAnswers++;
+            correctCounter.textContent = correctAnswers;
+          } else {
+            health--;
+            if (healthEls[health]) {
+              healthEls[health].style.visibility = "hidden";
+            }
+            const correctChoice = [...allChoices].find(c => c.dataset.correct === "true");
+            const correctIcon = document.createElement('img');
+            correctIcon.src = "./assets/right.png";
+            correctChoice.querySelector('.valid').appendChild(correctIcon);
+          }
+
+          setTimeout(() => {
+            if (health <= 0) {
+              gameOver("dead");
+            } else if (currentQuestion + 1 >= questions.length) {
+              gameOver("win");
+            } else {
+              currentQuestion++;
+              loadQuestion(currentQuestion);
+            }
+          }, 1500);
+        });
+      });
+    }
+
+    loadQuestion(currentQuestion);
+  </script>
+</body>
+</html>

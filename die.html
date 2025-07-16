@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DIE MODE — For the Obsessed</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="dier game">
+
+  <div class="game-bar">
+    <div class="healthC">
+      <div class="health"></div>
+      <div class="health"></div>
+      <div class="health"></div>
+    </div>
+    <div class="counter">Correct: <span id="correctCount">0</span></div>
+    <img src="./assets/backAsset 10.png" alt="Back" height="30">
+  </div>
+
+  <div class="questionContainer">
+    <img src="./assets/Asset 1@2x.png" alt="Logo" class="logo-on" style="height: 80px;">
+    <div class="question-text">
+      <h1 class="qno">question 01</h1>
+      <p>Whose words are these?</p>
+      <hr>
+      <h2 class="quote">Quote will appear here...</h2>
+    </div>
+    <div class="question"></div>
+  </div>
+
+  <footer>Made by Bethe ©2025 All rights reserved</footer>
+
+  <script>
+    const questions = [
+      {
+        quote: "“Our sun has set, no dawn shall ever rise.”",
+        choices: ["House Martell", "House Dayne", "House Blackfyre", "House Targaryen"],
+        correct: 1
+      },
+      {
+        quote: "“Fire and Blood.”",
+        choices: ["House Targaryen", "House Lannister", "House Baratheon", "House Velaryon"],
+        correct: 0
+      },
+      {
+        quote: "“Unbowed, Unbent, Unbroken.”",
+        choices: ["House Tyrell", "House Martell", "House Arryn", "House Greyjoy"],
+        correct: 1
+      },
+      {
+        quote: "“Aegon who was promised.”",
+        choices: ["Jon Snow", "Daenerys", "Aegon VI", "Rhaegar Targaryen"],
+        correct: 3
+      },
+      {
+        quote: "“There is only one war that matters: the Great War.”",
+        choices: ["Jon Snow", "Bran Stark", "Tormund", "Eddison Tollett"],
+        correct: 0
+      },
+      {
+        quote: "“The night is dark and full of terrors.”",
+        choices: ["Melisandre", "Beric Dondarrion", "Thoros of Myr", "Stannis Baratheon"],
+        correct: 0
+      },
+      {
+        quote: "“We do not sow.”",
+        choices: ["House Greyjoy", "House Bolton", "House Frey", "House Baratheon"],
+        correct: 0
+      },
+      {
+        quote: "“I am the sword in the darkness.”",
+        choices: ["The Night's Watch", "House Stark", "Faith Militant", "Brotherhood Without Banners"],
+        correct: 0
+      },
+      {
+        quote: "“Fear cuts deeper than swords.”",
+        choices: ["Arya Stark", "Syrio Forel", "Brienne of Tarth", "Sandor Clegane"],
+        correct: 1
+      },
+      {
+        quote: "“You murdered her children.”",
+        choices: ["Oberyn Martell", "Ellaria Sand", "Cersei", "Daenerys"],
+        correct: 0
+      }
+    ];
+
+    let currentQuestion = 0;
+    let health = 3;
+    let correctAnswers = 0;
+
+    const questionNumber = document.querySelector('.qno');
+    const quoteText = document.querySelector('.quote');
+    const questionContainer = document.querySelector('.question');
+    const healthEls = document.querySelectorAll('.health');
+    const correctCounter = document.getElementById('correctCount');
+
+    function gameOver() {
+      let name = localStorage.getItem("username");
+      name = name ? name.toUpperCase() : "OBSESSED FOOL";
+      questionContainer.style.display = "flex";
+      questionContainer.style.justifyContent = "center";
+      questionContainer.style.width = "100%";
+
+      let title = "";
+      let message = "";
+
+      if (correctAnswers >= 9) {
+        title = "🗡️ YOU WIELD BLACKFYRE";
+        message = `${name}, you are Valyrian steel made flesh. None may challenge your lore.`;
+      } else if (correctAnswers >= 7) {
+        title = "🐺 GHOST NOW FOLLOWS YOU";
+        message = `${name}, you walk in shadows, but the direwolf walks beside you.`;
+      } else if (correctAnswers >= 4) {
+        title = "🛡️ SWORN SWORD";
+        message = `${name}, you bled, but did not break. The Citadel respects your mind.`;
+      } else if (correctAnswers >= 2) {
+        title = "⚔️ NAMELESS SQUIRE";
+        message = `${name}, you stood before the lore and blinked. Still, there is time.`;
+      } else {
+        title = "🔥 FED TO DROGON";
+        message = `${name}, you have failed House and Honor. May your ashes whisper shame.`;
+      }
+
+      questionNumber.textContent = title;
+      quoteText.textContent = `${name}, ${title}`;
+      questionContainer.innerHTML = `
+        <p style="font-size: 20px; color: #2b2b2b; text-align: center">
+          ${message}<br><br>
+          You answered ${correctAnswers} correctly.<br>
+          Valar Morghulis.
+        </p>`;
+    }
+
+    function loadQuestion(index) {
+      const q = questions[index];
+      questionNumber.textContent = `question ${String(index + 1).padStart(2, '0')}`;
+      quoteText.textContent = q.quote;
+      questionContainer.innerHTML = "";
+
+      q.choices.forEach((name, i) => {
+        const div = document.createElement('div');
+        div.className = 'choice';
+        if (i === q.correct) div.dataset.correct = "true";
+
+        div.innerHTML = `
+          <p class="name">${name}</p>
+          <div class="valid"></div>
+        `;
+        questionContainer.appendChild(div);
+      });
+
+      const allChoices = document.querySelectorAll('.choice');
+      allChoices.forEach(choice => {
+        choice.addEventListener('click', () => {
+          allChoices.forEach(c => c.style.pointerEvents = "none");
+
+          const isCorrect = choice.dataset.correct === "true";
+          const icon = document.createElement('img');
+          icon.src = isCorrect ? "./assets/right.png" : "./assets/wrong.png";
+          choice.querySelector('.valid').appendChild(icon);
+
+          if (isCorrect) {
+            correctAnswers++;
+            correctCounter.textContent = correctAnswers;
+          } else {
+            health--;
+            if (healthEls[health]) {
+              healthEls[health].style.visibility = "hidden";
+            }
+
+            const correctChoice = [...allChoices].find(c => c.dataset.correct === "true");
+            const correctIcon = document.createElement('img');
+            correctIcon.src = "./assets/right.png";
+            correctChoice.querySelector('.valid').appendChild(correctIcon);
+          }
+
+          setTimeout(() => {
+            if (health <= 0 || currentQuestion + 1 >= questions.length) {
+              gameOver();
+            } else {
+              currentQuestion++;
+              loadQuestion(currentQuestion);
+            }
+          }, 1500);
+        });
+      });
+    }
+
+    loadQuestion(currentQuestion);
+  </script>
+</body>
+</html>
