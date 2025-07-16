@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    if(window.location.pathname.includes("/index.html")){
+    if(window.location.pathname.includes("./index.html")){
         const errorMassages=["enter your name you fucking bastard","just enter your name, don't make me do this you shit!","bastard of no-name enter your name!"];
         var i=0;
 
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         console.log(name);
                 } else{
                     localStorage.setItem("username",name);
-                    window.location.href="/level.html";
+                    window.location.href="./level.html";
                 }    
         });
         document.querySelector(".input").addEventListener("keydown",function (event){
@@ -28,19 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 else{
                     localStorage.setItem("username",name);
-                    window.location.href="/level.html";
+                    window.location.href="./level.html";
                 }   
             }  
         });
     }
-    if(window.location.pathname.includes("/level.html")){
+    if(window.location.pathname.includes("./level.html")){
         const name1=localStorage.getItem("username");
         document.getElementById("greet").textContent="Hello, "+name1;
         document.querySelector(".win").addEventListener("click",()=>{
-            window.location.href="/win.html";
+            window.location.href="./win.html";
         });
         document.querySelector(".die").addEventListener("click",()=>{
-            window.location.href="/die.html";
+            window.location.href="./die.html";
         });
 
     }
